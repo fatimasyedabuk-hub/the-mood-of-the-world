@@ -1,0 +1,24 @@
+/* Weather theme variables; set data-theme on the scene container. */
+:root{--ink:#F9F7F4;--muted:#E0DFE8;--accent:#F5BFA9;--surface:rgba(16,26,49,.48);--outline:rgba(255,255,255,.30);--sky-a:#111D38;--sky-b:#695E91;--sky-c:#E7A4A1;--radius:20px;--font-body:Arial,Helvetica,sans-serif;--font-display:Georgia,'Times New Roman',serif}
+[data-theme="cold"]{--sky-a:#102849;--sky-b:#477AA1;--sky-c:#B8D5E9;--accent:#C6E5FF}
+[data-theme="mild"]{--sky-a:#223354;--sky-b:#7877A6;--sky-c:#E9B9B0;--accent:#F5CEB8}
+[data-theme="warm"]{--sky-a:#4D315A;--sky-b:#B57078;--sky-c:#F3C084;--accent:#FFE1AE}
+[data-theme="night"]{--sky-a:#07142B;--sky-b:#1B2C50;--sky-c:#584D75;--accent:#BEC9F5}
+[data-weather="rain"]{--sky-b:#4D6685;--sky-c:#8A9CB1}
+[data-weather="storm"]{--sky-a:#111729;--sky-b:#39415F;--sky-c:#68738D}
+.weather-scene{background:linear-gradient(155deg,var(--sky-a),var(--sky-b) 55%,var(--sky-c));color:var(--ink);position:relative;overflow:hidden}
+.weather-panel{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);backdrop-filter:blur(12px)}
+.weather-display{font:normal clamp(4.5rem,12vw,10rem)/1 var(--font-display)}
+.weather-label{font:600 .72rem/1.5 var(--font-body);letter-spacing:.14em;text-transform:uppercase}
+.weather-icon{width:32px;height:32px;filter:brightness(0) invert(1)}
+@media(max-width:600px){.weather-panel{border-radius:16px}.weather-display{font-size:clamp(4rem,20vw,6rem)}}
+@media(prefers-reduced-motion:reduce){.weather-scene *, .weather-scene *::before, .weather-scene *::after{animation:none!important;transition:none!important}}
+
+/* Weather-specific images: weather scene can carry data-background. */
+.weather-scene[data-background="clear"]{--weather-image:url("backgrounds/clear.webp")}
+.weather-scene[data-background="cloudy"]{--weather-image:url("backgrounds/cloudy.webp")}
+.weather-scene[data-background="rain"]{--weather-image:url("backgrounds/rain.webp")}
+.weather-scene[data-background="snow"]{--weather-image:url("backgrounds/snow.webp")}
+.weather-scene[data-background="storm"]{--weather-image:url("backgrounds/storm.webp")}
+.weather-scene[data-background="night"]{--weather-image:url("backgrounds/night.webp")}
+.weather-scene[data-background]{background-image:linear-gradient(180deg,rgba(7,20,43,.50),rgba(7,20,43,.38)),var(--weather-image);background-size:cover;background-position:center}

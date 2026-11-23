@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Mood of the World</title>
+<meta name="description" content="Explore the atmosphere of different cities through current weather data. Every location creates a different scene.">
+<link rel="icon" href="assets/brand-mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/weather-theme.css">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-view="landing" data-mode="atmospheric">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <a class="brand" href="#home" id="brandLink">
+    <img src="assets/brand-mark.svg" alt="" width="36" height="36">
+    <span>THE MOOD OF THE WORLD</span>
+  </a>
+  <nav aria-label="Main">
+    <button type="button" class="navlink" id="aboutBtn">ABOUT</button>
+    <a class="navlink" href="#explore" id="exploreLink">EXPLORE</a>
+  </nav>
+</header>
+
+<main id="main" tabindex="-1">
+
+  <!-- Screen A: landing -->
+  <section id="landing" class="view" aria-labelledby="siteTitle">
+    <div class="landing-inner">
+      <h1 id="siteTitle">THE MOOD OF THE WORLD</h1>
+      <p class="subtitle">A world shaped by the weather.</p>
+      <p class="intro">Explore the atmosphere of different cities through current weather data. Every location creates a different scene, expressed through colour, movement and changing conditions.</p>
+      <a class="btn primary big" href="#explore" id="exploreBtn">EXPLORE THE WORLD</a>
+    </div>
+  </section>
+
+  <!-- Screen B: the experience -->
+  <section id="experience" class="view weather-scene" data-theme="mild" data-temp="mild" data-state="empty" hidden aria-labelledby="expTitle">
+    <div class="wrap">
+      <h2 id="expTitle" tabindex="-1">FEEL THE ATMOSPHERE</h2>
+
+      <div class="controls">
+        <form id="searchForm" class="searchform" role="search" novalidate>
+          <label for="cityInput" class="weather-label">Search for a city</label>
+          <div class="inputrow">
+            <input id="cityInput" name="city" type="search" placeholder="Search for a city..." autocomplete="off" autocapitalize="words" spellcheck="false" maxlength="80">
+            <button type="submit" class="btn primary" id="searchBtn" aria-label="Search"><img src="assets/icons/search.svg" alt="" width="20" height="20"><span>SEARCH</span></button>
+          </div>
+        </form>
+
+        <div class="modes" role="group" aria-labelledby="modeLabel">
+          <span id="modeLabel" class="weather-label">CHANGE EXPERIENCE</span>
+          <div class="seg">
+            <button type="button" data-mode="atmospheric" aria-pressed="true">ATMOSPHERIC</button>
+            <button type="button" data-mode="minimal" aria-pressed="false">MINIMAL</button>
+          </div>
+        </div>
+
+        <div class="soundbox">
+          <span class="weather-label" id="soundLabel">AMBIENT SOUND</span>
+          <button type="button" class="btn ghost" id="soundBtn" aria-pressed="false" aria-labelledby="soundLabel soundBtn">SOUND: OFF</button>
+        </div>
+      </div>
+
+      <div class="picks" aria-label="Quick picks">
+        <span class="weather-label">Try</span>
+        <button type="button" class="chip" data-city="Toronto">Toronto</button>
+        <button type="button" class="chip" data-city="Lahore">Lahore</button>
+        <button type="button" class="chip" data-city="Reykjavik">Reykjavik</button>
+        <button type="button" class="chip" data-city="Dubai">Dubai</button>
+        <button type="button" class="chip" data-city="Tokyo">Tokyo</button>
+        <button type="button" class="chip" data-city="Sydney">Sydney</button>
+      </div>
+
+      <div class="picks" id="matches" aria-label="Other matches" hidden>
+        <span class="weather-label">Other matches</span>
+      </div>
+
+      <div class="stage weather-scene" id="stage" data-background="cloudy">
+        <div class="layer tint"></div>
+        <div class="layer glow"></div>
+        <div class="layer clouds" id="clouds"></div>
+        <div class="layer haze"></div>
+        <canvas class="layer" id="fx" aria-hidden="true"></canvas>
+
+        <div class="stage-content">
+          <p class="state" id="stateEmpty">SEARCH FOR A CITY TO DISCOVER ITS ATMOSPHERE.</p>
+
+          <div class="state" id="stateLoading" role="status">
+            <span class="spinner" aria-hidden="true"></span>
+            <p>THE ATMOSPHERE IS TAKING SHAPE...</p>
+          </div>
+
+          <div class="state" id="stateError" role="alert">
+            <p id="errorText"></p>
+            <button type="button" class="btn primary" id="retryBtn">RETRY</button>
+          </div>
+
+          <div class="readout" id="readout">
+            <h3 id="placeName" class="place"></h3>
+            <div class="hero-data">
+              <div class="hero-temp">
+                <span class="weather-label">TEMPERATURE</span>
+                <span class="weather-display" id="tempValue" aria-hidden="true">--</span>
+                <span class="sr-only" id="tempSr"></span>
+              </div>
+              <div class="hero-cond">
+                <span class="weather-label">CURRENT CONDITIONS</span>
+                <span class="cond"><img class="weather-icon" id="condIcon" src="assets/icons/cloud.svg" alt="" width="32" height="32"><span id="condText">--</span></span>
+              </div>
+            </div>
+            <p class="message" id="message"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="metrics" id="metrics">
+        <div class="weather-panel metric">
+          <img class="weather-icon" src="assets/icons/droplet.svg" alt="" width="32" height="32">
+          <div><span class="weather-label">HUMIDITY</span><span class="val" id="humValue">--</span></div>
+          <div class="bar" aria-hidden="true"><i id="humBar"></i></div>
+        </div>
+        <div class="weather-panel metric">
+          <img class="weather-icon" src="assets/icons/wind.svg" alt="" width="32" height="32">
+          <div><span class="weather-label">WIND SPEED</span><span class="val" id="windValue">--</span></div>
+          <div class="bar" aria-hidden="true"><i id="windBar"></i></div>
+        </div>
+        <div class="weather-panel metric">
+          <img class="weather-icon" src="assets/icons/cloud-cover.svg" alt="" width="32" height="32">
+          <div><span class="weather-label">CLOUD COVER</span><span class="val" id="cloudValue">--</span></div>
+          <div class="bar" aria-hidden="true"><i id="cloudBar"></i></div>
+        </div>
+      </div>
+
+      <div class="actions" id="actions" hidden>
+        <button type="button" class="btn ghost" id="refreshBtn"><img class="weather-icon" src="assets/icons/refresh.svg" alt="" width="20" height="20"><span>REFRESH ATMOSPHERE</span></button>
+        <p class="updated" id="updated"></p>
+        <p class="busy" id="busyLine" role="status" hidden>THE ATMOSPHERE IS TAKING SHAPE...</p>
+      </div>
+
+      <p class="sr-only" id="announce" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  Weather data by <a href="https://open-meteo.com/" rel="noopener">Open-Meteo</a> (<a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a>).
+</footer>
+
+<!-- About -->
+<dialog id="aboutDialog" aria-labelledby="aboutTitle">
+  <div class="about">
+    <h2 id="aboutTitle">ABOUT</h2>
+    <p class="lead">What if people could feel weather data, instead of just reading it?</p>
+    <p>Type a city name and its current weather is fetched live from Open-Meteo. The data does not sit beside the design, it shapes it. The readings are current conditions from a weather model, not from a physical sensor.</p>
+    <table>
+      <caption class="weather-label">How the data shapes the scene</caption>
+      <thead><tr><th scope="col">Data</th><th scope="col">What changes</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Temperature</th><td>Colour: below 10°C cold blues, 10 to 24°C soft violet and blush, 25°C and over warm amber</td></tr>
+        <tr><th scope="row">Weather code</th><td>Picture, rain or snow animation, message and ambient sound</td></tr>
+        <tr><th scope="row">Wind speed</th><td>How fast clouds and rain or snow move</td></tr>
+        <tr><th scope="row">Cloud cover</th><td>How many cloud shapes appear, and how dense they are</td></tr>
+        <tr><th scope="row">Humidity</th><td>A soft haze over the scene</td></tr>
+        <tr><th scope="row">Day or night</th><td>Brightness, and the night sky</td></tr>
+      </tbody>
+    </table>
+    <p class="small">The thresholds are design choices, not official weather categories.</p>
+    <h3 class="weather-label">Credits</h3>
+    <ul class="small">
+      <li>Weather data: <a href="https://open-meteo.com/" rel="noopener">Open-Meteo</a> Forecast and Geocoding APIs, <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a>.</li>
+      <li>The sky backgrounds are AI-generated images. Icons and the globe mark are original vector graphics. The ambient sound loops are synthesised (not recordings of real weather) and were levelled for the web. Visual design by Dima Hamdan.</li>
+      <li>Type: Georgia and Arial (system fonts).</li>
+      <li>CCT360 Interactive Discovery group project by Fatima Bukhari, Lama Hamdan and Dima Hamdan.</li>
+    </ul>
+    <button type="button" class="btn primary" id="aboutClose">CLOSE</button>
+  </div>
+</dialog>
+
+<!-- Ambient loops: start only after the visitor turns sound on -->
+<audio id="sndRain" src="assets/audio/gentle-rain.mp3" loop preload="none"></audio>
+<audio id="sndWind" src="assets/audio/soft-wind.mp3" loop preload="none"></audio>
+<audio id="sndThunder" src="assets/audio/distant-thunder.mp3" loop preload="none"></audio>
+
+<script src="js/app.js"></script>
+</body>
+</html>
