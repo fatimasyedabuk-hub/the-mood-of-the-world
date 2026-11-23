@@ -52,17 +52,13 @@ Labelled search field, visible focus, 44 px touch targets, keyboard-operable con
 
 ## Run it locally
 
-The page calls the web, so it needs an internet connection.
+The page calls a live API, so it needs an internet connection.
 
 ```
 python3 -m http.server 8000
 ```
 
-Then open http://localhost:8000. (Opening `index.html` directly also works.)
-
-## Publish on GitHub Pages
-
-Repo **Settings > Pages > Deploy from a branch > `main` / root**. All paths are relative, so no changes are needed.
+Then open http://localhost:8000.
 
 ## Files
 
